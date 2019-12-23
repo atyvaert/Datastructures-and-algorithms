@@ -1,0 +1,172 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+import java.util.ArrayList;
+import java.util.Collections;
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class HRM implements IHRM {
+    private ArrayList <Employee> employees;
+    private ArrayList <EmployeeRequest> requests;
+
+    public HRM(ArrayList<Employee> employees) {
+        this.employees = employees;
+        this.requests = new ArrayList<>(0);
+    }
+    public int plaatsWNR( String employeeID){
+        boolean flag = false;
+        int k=-1;
+        for (int i=0; i<employees.size(); i++){
+        if (employees.get(i).getEmployeeID().equals(employeeID)){
+            flag = true;
+            k= i;
+        }
+        }
+    if (!flag)
+    System.out.println("De werknemer bestaat niet!");
+
+    return k;
+    }
+    
+
+    public void addVacationRequest(String employeeID, int nrOfDays){
+        if(plaatsWNR (employeeID)!=-1){
+        VacationRequest vr = new VacationRequest(nrOfDays, employees.get(plaatsWNR(employeeID)));
+        requests.add(vr);
+    }
+}
+
+    public void addReimbursementRequest( String employeeID, double amount, String description){
+         if(plaatsWNR (employeeID)!=-1){
+             ReimbursementRequest rr = new ReimbursementRequest(amount, description, employees.get(plaatsWNR(employeeID)));
+             requests.add(rr);
+         }
+    }
+
+    public ArrayList <EmployeeRequest> getEmployeeRequests( String employeeID, Decision preProcessingDecision, Decision mgrDecision){
+       ArrayList <EmployeeRequest> eRequests = new ArrayList < >();
+        if(plaatsWNR (employeeID)!=-1){
+            for (EmployeeRequest req : requests){
+                if( req.getRequestID().equals(employeeID) && req.getManagerDecision().equals(mgrDecision) && req.getPreProcessingDecision().equals(preProcessingDecision)){
+                    eRequests.add(req);
+                }        
+            }
+      
+    }   else
+            return null;
+         return eRequests;
+}  
+
+    public void preProcessRequests(){
+        for (EmployeeRequest req : requests) {
+            if (req instanceof VacationRequest){
+                if (employees.get(plaatsWNR(req.getRequestID())).getNrOfFreeDays() > ((VacationRequest) req).getNrOfDays())
+                    req.setPreProcessingDecision(Decision.Accepted);
+                else 
+                    req.setPreProcessingDecision(Decision.NotAccepted);
+            }
+            if (req instanceof ReimbursementRequest){
+                if (employees.get(plaatsWNR(req.getRequestID())).getBudget()> ((ReimbursementRequest) req).getAmount())
+                     req.setPreProcessingDecision(Decision.Accepted);
+                else 
+                    req.setPreProcessingDecision(Decision.NotAccepted);
+            }
+        }
+    }
+
+    public void approveRequest(String requestID, String managerID){
+        for (EmployeeRequest er : requests ) {
+                if (er.getRequestID().equals(requestID) && (er.getRequester().getManager().getEmployeeID().equals(managerID))){
+                        if((er.getPreProcessingDecision().equals(Decision.Accepted)) && (er.getManagerDecision().equals(Decision.Undecided))){
+                            er.setManagerDecision(Decision.Accepted);
+                            if (er instanceof VacationRequest){
+                            er.getRequester().setNrOfFreeDays(er.getRequester().getNrOfFreeDays()-((VacationRequest) er).getNrOfDays());
+                            }
+                            if (er instanceof ReimbursementRequest){
+                                er.getRequester().setBudget(er.getRequester().getBudget()-((ReimbursementRequest) er).getAmount());
+                            }
+                           preProcessRequests();
+    } else 
+                            System.out.println("De aanvraag kan niet goedgekeurd worden!");
+        } else
+                    System.out.println("De aanvraag kan niet goedgekeurd worden!");
+                
+
+}
+    }
+
+    public void disapproveRequest(String requestID, String managerID){
+                for (EmployeeRequest er : requests ) {
+                if (er.getRequestID().equals(requestID) && (er.getRequester().getManager().getEmployeeID().equals(managerID))){
+                        if((er.getPreProcessingDecision().equals(Decision.Accepted)) && (er.getManagerDecision().equals(Decision.Undecided))){
+                            er.setManagerDecision(Decision.Accepted);
+                            if (er instanceof VacationRequest){
+                            er.getRequester().setNrOfFreeDays(er.getRequester().getNrOfFreeDays()-((VacationRequest) er).getNrOfDays());
+                            }
+                            if (er instanceof ReimbursementRequest){
+                                er.getRequester().setBudget(er.getRequester().getBudget()-((ReimbursementRequest) er).getAmount());
+                            }
+                           preProcessRequests();
+    } else 
+                            System.out.println("De aanvraag kan niet afgekeurd worden!");
+        } else
+                    System.out.println("De aanvraag kan niet afgekeurd worden!");
+                
+
+}
+    }
+
+    public String toString(){
+        ArrayList<Employee> sortedemp= new ArrayList<>();
+        sortedemp.addAll(employees);
+        Collections.sort(sortedemp);
+        String output = null;
+        ArrayList <EmployeeRequest> r = new ArrayList<>();
+        for (Employee em: sortedemp){
+            r=null;
+            output += "\n"+ em.toString();
+            output = output+ ("\n ----------------------" );
+            output = output+ ("\n"+"Goedgekeurde aanvragen: ");
+            for (int i=0; i< (getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.Accepted)).size(); i++){
+            r.add((getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.Accepted)).get(i));
+            if (r.isEmpty()){
+                output = output+ ("\n Geen requests beschikbaar");
+            } else {
+                for(int j=0; j<r.size(); j++){
+                output += "\n"+ r.get(j).toString();
+        }
+            }
+            }
+            output = output+ ("\n"+"Geweigerde aanvragen: ");
+            for (int i=0; i< (getEmployeeRequests(em.getEmployeeID(), Decision.NotAccepted, Decision.NotAccepted)).size(); i++){
+                 r.add((getEmployeeRequests(em.getEmployeeID(), Decision.NotAccepted, Decision.NotAccepted)).get(i));
+            }
+            for (int i=0; i< (getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.NotAccepted)).size(); i++){
+                 r.add((getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.NotAccepted)).get(i));
+            } if (r.isEmpty()){
+                output = output+ ("\n Geen requests beschikbaar");
+            } else {
+                for(int j=0; j<r.size(); j++){
+                output += "\n"+ r.get(j).toString();
+        }
+            }
+            output = output+ ("\n"+"Aanvragen die nog moeten goedgekeurd worden: ");
+            for (int i=0; i< (getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.Undecided)).size(); i++){
+            r.add((getEmployeeRequests(em.getEmployeeID(), Decision.Accepted, Decision.Undecided)).get(i));
+            if (r.isEmpty()){
+                output = output+ ("\n Geen requests beschikbaar");
+            } else {
+                for(int j=0; j<r.size(); j++){
+                output += "\n" + r.get(j).toString();
+        }
+            }
+            }
+
+    }
+        return output;
+    }
+}
