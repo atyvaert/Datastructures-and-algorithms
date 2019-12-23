@@ -1,0 +1,58 @@
+
+import java.util.ArrayList;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class BasketAnalysis {
+    private ArrayList <Basket> baskets = new ArrayList<>();
+
+    public BasketAnalysis(String basketsFileContent) {
+     int a=0;
+     if ((basketsFileContent!=null && (!basketsFileContent.equals("")))){
+         baskets= new ArrayList<>(); 
+         a = basketsFileContent.split("\n").length;
+         String [] firstSplit = new String[a];      
+         firstSplit = basketsFileContent.split("\n");
+         for (int i=0; i<a; i++)
+         baskets.add(Basket.parseBasketLine(firstSplit[i]));
+    } else
+         baskets= new ArrayList<>();    
+    }
+    public static Item[] getItemsFromBaskets(Basket[] baskets){
+        ArrayList<Item> bk = new ArrayList<>();
+        for (int i=0; i<baskets.length; i++){
+            for (int j=0; j<baskets[i].getItems().size(); j++){
+                if (!bk.contains(baskets[i].getItems().get(j)))
+                    bk.add(baskets[i].getItems().get(j));
+        }
+        }
+        return bk.toArray(new Item[bk.size()]);
+    }
+    
+    public Basket[] getClientBaskets(String clientID){
+        ArrayList<Basket> bk = new ArrayList<>();
+        for (Basket basket: baskets){
+            if(basket.getClientID().equals(clientID)){
+                bk.add(basket);
+            }
+        }
+        return bk.toArray((new Basket[bk.size()]));
+    }
+    public void analyzeClients(String[] clients, int treshold){
+        for (String c: clients){
+        System.out.println("Analysis Client "+ c + " with threshold "+ treshold);
+        Basket[] baskets = getClientBaskets(c);
+        Item[] items = getItemsFromBaskets(baskets);
+        TransactionAnalysis ta= new TransactionAnalysis(baskets, items);
+        System.out.println(ta.aPrioriAlgorithm(treshold));
+    }
+}
+}
