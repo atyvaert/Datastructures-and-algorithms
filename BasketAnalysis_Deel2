@@ -1,0 +1,81 @@
+
+import java.util.ArrayList;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Basket implements Transaction{
+    private String clientID;
+    private String basketID;
+    private ArrayList <BasketItem>  basketItems;
+
+    public Basket( String basketID, String clientID) {
+        this.clientID = clientID;
+        this.basketID = basketID;
+        this.basketItems = new ArrayList<>();
+    }
+
+    public String getClientID() {
+        return clientID;
+    }
+
+    public String getBasketID() {
+        return basketID;
+    }
+    
+    
+
+    @Override
+    public ArrayList<Item> getItems() {
+        ArrayList <Item> bItem= new ArrayList<>();
+        for (BasketItem it: basketItems) {
+           bItem.add(it) ;
+        }
+        return  bItem;
+    }
+
+    @Override
+    public boolean containsItem(Item item) {
+        for (BasketItem it: basketItems){
+            if (it.equals(item) && item!=null)
+                return true;
+    }
+        return false;
+    }
+    @Override
+    public boolean containsItemSet(Item[] itemSet) {
+        int containsItem=0;
+        if ( itemSet==null|| itemSet.length==0 )
+            return false;
+        else{
+            for(Item it: itemSet){
+            for (BasketItem bi : basketItems){
+                if (it.equals(bi))
+                    containsItem++;
+            }
+            }
+            if (containsItem== itemSet.length)
+                return true;
+            else
+                return false;
+        }
+    }
+    public static Basket parseBasketLine(String line){
+        String [] basket = line.split(";");
+        Basket a = new Basket(basket[0], basket[1]);
+        for (int i=2; i<basket.length; i=i+2){
+            int quantity= Integer.parseInt(basket[i+1]);
+            BasketItem c = new BasketItem(basket[i], quantity);
+            a.basketItems.add(c);   
+        }
+        return a;
+    }
+    
+}
