@@ -1,0 +1,64 @@
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Pass implements IEdge, Serializable {
+private static final long serialVersionUID = 12;
+private Player sender;
+private Player receiver;
+private int nrOfTimes;
+
+    public Pass(Player sender, Player receiver, int nrOfTimes) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.nrOfTimes = nrOfTimes;
+    }
+
+
+
+    @Override
+    public int getWeight() {
+        return this.nrOfTimes;
+    }
+
+    @Override
+    public INode getStart() {
+       return this.sender;
+    }
+
+    @Override
+    public INode getEnd() {
+        return this.receiver;
+    }
+@Override
+    public int hashCode(){
+        int hash = 12;
+        hash = 121* hash+Objects.hashCode(this.sender)+ 121*hash+Objects.hashCode(this.receiver);
+        return hash;
+    }
+    
+@Override
+    public boolean equals(Object o){
+        if (this == null)
+            return false;
+        if (!(o instanceof Pass))
+            return false;
+        final Pass other = (Pass) o;
+        return ((Objects.equals(other.sender, this.sender))&& (Objects.equals(other.receiver, this.receiver)));
+    }
+    
+@Override
+    public String toString(){
+        return "Pass from "+ sender.getName() +" to "+ receiver.getName();
+    }
+}
