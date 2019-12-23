@@ -1,0 +1,128 @@
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class KlantenKaart implements Serializable {
+    private static final long serialVersionUID = 552;
+    private String klantID;
+    private String voornaam;
+    private String naam;
+    private String email;
+    private ArrayList<Transactie> transacties;
+    private HashMap <Winkel, Integer> verzameldePuntenPerWinkel;
+
+    public KlantenKaart(String klantID, String voornaam, String naam, String emial) {
+        this.klantID = klantID;
+        this.voornaam = voornaam;
+        this.naam = naam;
+        this.email = emial;
+        transacties = new ArrayList<>(0);
+        verzameldePuntenPerWinkel = new HashMap<>(0);
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getKlantID() {
+        return klantID;
+    }
+
+    public String getVoornaam() {
+        return voornaam;
+    }
+
+    public String getNaam() {
+        return naam;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public ArrayList<Transactie> getTransacties() {
+        return transacties;
+    }
+
+    public HashMap<Winkel, Integer> getVerzameldePuntenPerWinkel() {
+        return verzameldePuntenPerWinkel;
+    }
+    
+    public void toevoegenTransactie(Winkel winkel, double bedrag, int punten){
+        Transactie t = new Transactie(winkel.getWinkelID(), bedrag, punten);
+        transacties.add(t);
+        int initAantal =0;
+        int totaal =0;
+        for (Winkel w : verzameldePuntenPerWinkel.keySet()){
+            if (w.getWinkelID().equals(winkel.getWinkelID())){
+                initAantal = verzameldePuntenPerWinkel.get(w);
+            }
+        }
+        totaal = punten + initAantal;
+        verzameldePuntenPerWinkel.put(winkel, totaal);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final KlantenKaart other = (KlantenKaart) obj;
+        if (!Objects.equals(this.klantID, other.klantID)) {
+            return false;
+        }
+        if (!Objects.equals(this.voornaam, other.voornaam)) {
+            return false;
+        }
+        if (!Objects.equals(this.naam, other.naam)) {
+            return false;
+        }
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.transacties, other.transacties)) {
+            return false;
+        }
+        return Objects.equals(this.verzameldePuntenPerWinkel, other.verzameldePuntenPerWinkel);
+    }
+    @Override
+    public int hashCode(){
+        int hash = 552;
+        hash = hash*56 + Objects.hashCode(this.email) + Objects.hashCode(this.klantID)
+                + Objects.hashCode(this.naam) + Objects.hashCode(this.transacties)
+                + Objects.hashCode(this.verzameldePuntenPerWinkel) +Objects.hashCode(this.voornaam);
+    return hash;
+    }
+    public int totaalPunten(){
+        int totaal = 0;
+        for (Integer i : verzameldePuntenPerWinkel.values()){
+            totaal += i;
+        }
+        return totaal;
+    }
+    
+    @Override
+    public String toString(){
+        return "Klantenkaart van "+ voornaam + " " + naam + "("+ klantID
+                +"): "+ transacties.size() + " transactie(s) in " + verzameldePuntenPerWinkel.size()
+                + " winkel(s) en een totaal van " + totaalPunten() + " beschikbare punten";
+    }
+}
