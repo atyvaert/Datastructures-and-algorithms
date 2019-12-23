@@ -1,0 +1,64 @@
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Transactie implements Serializable {
+    private static final long serialVersionUID = 113;
+    private String winkelID;
+    private double bedrag;
+    private int punten;
+    private Date datum;
+
+    public Transactie(String winkelID, double bedrag, int punten) {
+        this.winkelID = winkelID;
+        this.bedrag = bedrag;
+        this.punten = punten;
+        this.datum = new Date();
+    }
+    
+    @Override
+    public int hashCode(){
+        int hash = 113;
+        hash = hash* 89 + Objects.hashCode(this.winkelID) + Objects.hashCode(this.bedrag)
+                + Objects.hashCode(this.punten) + Objects.hashCode(this.datum);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Transactie other = (Transactie) obj;
+        if (Double.doubleToLongBits(this.bedrag) != Double.doubleToLongBits(other.bedrag)) {
+            return false;
+        }
+        if (this.punten != other.punten) {
+            return false;
+        }
+        if (!Objects.equals(this.winkelID, other.winkelID)) {
+            return false;
+        }
+        return Objects.equals(this.datum, other.datum);
+    }
+    @Override
+    public String toString(){
+        return "Aankoop op "+ datum + " van " + bedrag + "("+punten+" punten) in "+ winkelID;
+    }
+}
