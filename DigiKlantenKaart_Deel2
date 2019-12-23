@@ -1,0 +1,74 @@
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Winkel implements Serializable{
+    private static final long serialVersionUID = 9674;
+    private String winkelID;
+    private String naam;
+    private double aantalPuntenPerEuro;
+    private String beloningTekst;
+
+    public Winkel(String winkelID, String naam, double aantalPuntenPerEuro, String beloningTekst) {
+        this.winkelID = winkelID;
+        this.naam = naam;
+        this.aantalPuntenPerEuro = aantalPuntenPerEuro;
+        this.beloningTekst = beloningTekst;
+    }
+    
+    
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getWinkelID() {
+        return winkelID;
+    }
+
+    public String getNaam() {
+        return naam;
+    }
+
+    public double getAantalPuntenPerEuro() {
+        return aantalPuntenPerEuro;
+    }
+
+    public String getBeloningTekst() {
+        return beloningTekst;
+    }
+    
+    @Override
+    public int hashCode(){
+        int hash = 9674;
+        hash =79 * hash + Objects.hashCode(this.winkelID);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals (Object o){
+        if (o == null)
+            return false;
+        if  (!( o instanceof Winkel))
+            return false;
+        final Winkel other = (Winkel) o;
+        return (Objects.equals(other.winkelID, this.winkelID) &&Objects.equals(other.naam, this.naam)
+                && Objects.equals(other.beloningTekst, this.beloningTekst) && Objects.equals(other.aantalPuntenPerEuro, this.aantalPuntenPerEuro)) ;
+
+    }
+    
+    @Override
+    public String toString(){
+        return this.naam + "("+ this.winkelID +") geeft "+ this.aantalPuntenPerEuro + " punten per euro.";
+    }
+}
