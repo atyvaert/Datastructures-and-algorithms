@@ -1,0 +1,44 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class BasketItem implements Item{
+    private String productID;
+    private int quantity;
+
+    public BasketItem(String productID, int quantity) {
+        this.productID = productID;
+        if (quantity<=0){
+            System.out.println("Ongeldige hoeveelheid!");
+            System.exit(0);
+        }
+        else 
+            this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+    
+
+    public String getItemName() {
+        return this.productID;
+    }
+    
+    public boolean equals(Object obj){
+        if (obj!=null && obj instanceof BasketItem){
+            BasketItem item = (BasketItem) obj;
+            if (this.productID.equals(item.productID))
+                    return true;
+        }
+        else 
+            return false;
+        return false;
+    }
+}
