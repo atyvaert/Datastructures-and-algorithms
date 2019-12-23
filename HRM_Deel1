@@ -1,0 +1,100 @@
+
+import java.util.Objects;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Employee extends Person implements Comparable <Employee>{
+    private String employeeID;
+    private Employee manager;
+    private int nrOfFreeDays;
+    private double budget;
+    
+    public Employee(String employeeID, Employee manager, String firstname, String lastname, String gender, String email) {
+		super(firstname, lastname, gender, email);
+                this.employeeID= employeeID;
+                this.manager = manager;
+                this.budget= 1000;
+                this.nrOfFreeDays=100;
+	}
+
+    public String getEmployeeID() {
+        return employeeID;
+    }
+
+    public Employee getManager() {
+        return manager;
+    }
+
+    public int getNrOfFreeDays() {
+        return nrOfFreeDays;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setEmployeeID(String employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    public void setNrOfFreeDays(int nrOfFreeDays) {
+        this.nrOfFreeDays = nrOfFreeDays;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+    
+    @Override
+    public boolean equals (Object o){
+        boolean gelijk = false;
+         if ((o != null)&& o instanceof Employee){
+        Employee otherEmployee= (Employee)o;
+        if (employeeID.equals(otherEmployee.getEmployeeID()))
+            gelijk = true;
+        else
+            ;
+         }
+        return gelijk;     
+    
+    }
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.employeeID);
+        hash = 79 * hash + Objects.hashCode(this.manager);
+        hash = 79 * hash + this.nrOfFreeDays;
+        hash = 79 * hash + (int) (Double.doubleToLongBits(this.budget) ^ (Double.doubleToLongBits(this.budget) >>> 32));
+        return hash;
+    }
+
+    public int compareTo(Employee e)  {
+        if ((e != null)&& e instanceof Employee){
+            Employee otherEmployee = (Employee) e;
+            return (employeeID.compareTo(otherEmployee.getEmployeeID()));
+            
+        }
+        return -1;
+    }
+    @Override
+    public String toString(){
+        String output;
+        if (this.getManager()==null)
+            output = employeeID + " "+ this.getFirstname() + " " +this.getLastname();
+        else
+            output = employeeID + " "+ this.getFirstname() + " " +this.getLastname()+ " (Manager: "+ this.getManager().getEmployeeID()+")";
+        return output;
+    }
+}
