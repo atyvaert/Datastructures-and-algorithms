@@ -1,0 +1,90 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class MCExamenStudent {
+    private MCExamen examen;
+    private Student student;
+    private boolean[][] antwoorden;
+
+    public MCExamenStudent(MCExamen examen, Student student) {
+        this.examen = examen;
+        this.student = student;
+        this.antwoorden= new boolean [examen.getAantalVragen()][];
+    }
+    
+    public void leesAntwoorden (File file){
+        try {
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNextLine()){
+                String line= scanner.nextLine();
+                String[] vraagEnAntwoorden= line.split(":");
+                String[] antwoordenArray;
+                if(vraagEnAntwoorden.length >1)
+                    antwoordenArray = vraagEnAntwoorden[1].split(";");
+                else
+                    antwoordenArray = new String[0];
+                int vraagnummer = Integer.parseInt(vraagEnAntwoorden[0]);
+                if (vraagnummer> examen.getAantalVragen())
+                    throw new Exception();
+                int aantalAntwoorden = examen.getAantalAntwoordenVanVraag(vraagnummer-1);
+                this.antwoorden[vraagnummer-1] = new boolean[aantalAntwoorden];
+                for (int i=0; i<aantalAntwoorden; i++)
+                    this.antwoorden[vraagnummer-1][i]=false;
+                for (String antwoord: antwoordenArray){
+                    int antwoordnummer= Integer.parseInt(antwoord);
+                    this.antwoorden[vraagnummer-1][antwoordnummer-1]= true;
+                }   
+                        }
+        }  catch (Exception ex) {
+            System.out.println("Er is een probleem met het meegegeven bestand!");
+        }
+    }
+    public void berekenResultaat(){
+        String resultaat = String.format(("%s(%s)-%s\n"), student, student.getStudentenNummer(), examen.getNaamVak());
+        String[] verbetering= getVerbetering();
+        int aantalCorrecteAntwoorden = getAantalCorrecteAntwoorden();
+        for (int i=0; i<examen.getAantalVragen(); i++)
+            resultaat += String.format("Vraag%d: %s\n", i+1, verbetering[i]);
+        if (examen.isHogereCesuur()){
+            double eindscore = examen.bepaalScoreMetCesuur(aantalCorrecteAntwoorden);
+            double hogereCesuur= examen.bepaalHogereCesuur();
+            resultaat+= String.format("Eindscore: %s/20 met een hogere cesuur van %s", eindscore, hogereCesuur);     
+        } else{
+            double eindscore = examen.bepaalScoreZonderCesuur(aantalCorrecteAntwoorden);
+            resultaat += String.format("Eindscore: %s/20", eindscore);
+        }
+        System.out.println(resultaat);
+    }
+    public String[] getVerbetering(){
+        String [] verbetering = new String[examen.getAantalVragen()];
+        for (int i=0; i< examen.getAantalVragen(); i++){
+            if(examen.getVragen().get(i).isCorrect(this.antwoorden[i]))
+                verbetering[i]= "juist";
+            else
+                verbetering[i]= "fout";   
+        }
+        return verbetering;
+    }
+    private int getAantalCorrecteAntwoorden(){
+        int ACA = 0;
+        for (int i=0; i< examen.getAantalVragen(); i++){
+            if(examen.getVragen().get(i).isCorrect(this.antwoorden[i]))
+                ACA++;
+        }return ACA;
+    }
+    
+}
