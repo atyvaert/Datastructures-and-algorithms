@@ -87,9 +87,5 @@ public class MCExamen {
         else
             return scoreMetCesuur;
     }
-//    public static void main(String[] args) {
-//       double k= 10/4;
-//       System.out.println(k);
-//        
-//    }
+
 }
