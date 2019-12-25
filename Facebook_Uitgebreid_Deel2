@@ -1,0 +1,33 @@
+
+import java.io.File;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class FacebookException extends Exception {
+
+    public FacebookException(Account a) {
+        super("Er bestaat al een account met login '"+ a.getLogin() + "'!") ;
+    }
+
+    public FacebookException(Integer i) {
+        super("De post met postID '"+ i + "' bestaat niet!");
+    }
+    public FacebookException(Post p){
+        super("De post met postID '"+ p.getPostID() + "' kan niet toegevoegd worden!");
+    }
+    public FacebookException(String s){
+        super("De account met login '"+ s+ "' bestaat niet!");
+    }
+    public FacebookException(File f){
+        super("Het bestand '"+ f+ "' is corrupt!");
+    }
+    
+}
