@@ -1,0 +1,141 @@
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+public class Account implements Serializable{
+private static final long serialVersionUID = 19;
+private String firstName;
+private String lastName;
+private String gender;
+private String email;
+private String login;
+private String password;
+private HashSet <Account> friends;
+
+private HashSet <Post> wall;
+private HashSet <Integer> likes;
+public Account(String firstName, String lastName, String gender, String email, String login,
+String password) {
+this.firstName = firstName;
+this.lastName = lastName;
+this.gender = gender;
+this.email = email;
+this.login = login;
+this.password = password;
+this.friends = new HashSet<>();
+this.wall = new HashSet<>();
+this.likes = new HashSet<>();
+}
+public String getFirstName() {
+return firstName;
+}
+public void setFirstName(String firstName) {
+this.firstName = firstName;
+}
+public String getLastName() {
+return lastName;
+}
+public void setLastName(String lastName) {
+this.lastName = lastName;
+}
+public String getGender() {
+return gender;
+}
+public void setGender(String gender) {
+this.gender = gender;
+}
+public String getEmail() {
+return email;
+}
+public void setEmail(String email) {
+this.email = email;
+}
+public String getLogin() {
+return login;
+}
+public void setLogin(String login) {
+this.login = login;
+}
+public String getPassword() {
+return password;
+}
+public void setPassword(String password) {
+this.password = password;
+}
+public static long getSerialVersionUID() {
+return serialVersionUID;
+}
+public HashSet<Account> getFriends() {
+return friends;
+}
+public HashSet<Post> getWall() {
+return wall;
+}
+public HashSet<Integer> getLikes() {
+return likes;
+}
+@Override
+public String toString() {
+    return firstName 
++ lastName + " (" + friends.size() +" vrienden)";
+
+}
+public String getCSV(){ 
+    return firstName + ";" + lastName + ";" + gender + ";" + email + ";" + login + ";" + password;
+}
+@Override
+public int hashCode() {
+int hash = 7;
+hash = 83 * hash + Objects.hashCode(this.firstName);
+hash = 83 * hash + Objects.hashCode(this.lastName);
+hash = 83 * hash + Objects.hashCode(this.gender);
+hash = 83 * hash + Objects.hashCode(this.email);
+hash = 83 * hash + Objects.hashCode(this.login);
+hash = 83 * hash + Objects.hashCode(this.password);
+return hash;
+}
+public boolean equals (Object object){
+if ((object != null) && (object instanceof Account) && (object.hashCode()==this.hashCode())){
+Account o = (Account) object;
+if((o.zelfdeVrienden(this) == true) && (o.zelfdePosts(this)==true) && (Objects.equals(this.likes,o.likes)))
+return true;
+}
+return false;
+}
+public boolean zelfdeVrienden(Account acc){
+int count = 0;
+if (acc.getFriends().size()== this.getFriends().size()){
+for (Account friend1: this.getFriends()){
+for(Account friend2 : acc.getFriends()){
+if(friend1.getLogin().equals(friend2.getLogin())){
+count++;
+}
+}
+}
+}
+else
+return false;
+if(count == acc.getFriends().size())
+return true;
+else
+return false;
+}
+public boolean zelfdePosts (Account acc){
+int count = 0;
+if(acc.getWall().size() == this.getWall().size()){
+for(Post post1: this.getWall()){
+for(Post post2: acc.getWall()){
+if(post1.getPostID().equals(post2.getPostID())){
+count++;
+}
+}
+}
+}
+else
+return false;
+if(count == acc.getWall().size())
+return true;
+else
+return false;
+}
+}
