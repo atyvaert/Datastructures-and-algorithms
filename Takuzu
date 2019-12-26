@@ -1,0 +1,120 @@
+
+import java.util.Scanner;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author marlonvanbesien
+ */
+public class Takuzu {
+    private int size;
+    private String[][] Takuzu;
+    
+    public Takuzu(int size) {
+        this.size = size;
+        this.Takuzu = new String[size][size];
+    }
+    public String getCell(int row, int column){
+       return this.Takuzu[row-1][column-1];    
+    }
+    public String [] getColumn(int column){
+        String [] kolom= new String[size];
+        for (int i=0; i<Takuzu.length ;i++){
+           kolom[i]=this.Takuzu[i][column-1]; 
+        }
+        return kolom;
+    }
+    public String[] getRow(int row){
+        String [] rij =new String [size];
+        System.arraycopy(this.Takuzu[row-1], 0, rij, 0, Takuzu.length);
+        return rij;
+    }
+    public boolean isEmpty(int row, int column){
+        return this.Takuzu[row-1][column-1]==null;   
+    }
+    public boolean isCompleted(){
+        boolean vol= true;
+        for (int i=0; i<this.Takuzu.length; i++){
+            for (int j=0; j< this.Takuzu.length; j++){
+                if (isEmpty(i+1,j+1))
+                    vol=false;
+            }
+        }
+        return vol;
+    }
+    public boolean setCell(int row, int column, String value){
+        boolean gelukt = false;
+        int aantalrij =0;
+        int aantalkolom=0;
+        int aantalnaelkaarrij=0;
+        int aantalnaelkaarkolom=0;
+        if ((value.equals("0") || value.equals("1")) && isEmpty(row, column)){
+            this.Takuzu[row-1][column-1]= value;
+            gelukt =true;
+            for (int i=0; i< Takuzu.length; i++){
+                if (this.getColumn(column)[i] != null && this.getColumn(column)[i].equals(value)){
+                    aantalkolom++;
+                    aantalnaelkaarkolom++;
+                }
+                else 
+                    aantalnaelkaarkolom=0;
+                if (this.getRow(row)[i]!= null && this.getRow(row)[i].equals(value)){
+                    aantalrij++;
+                    aantalnaelkaarrij++; 
+            }   else
+                    aantalnaelkaarrij=0;
+                if (aantalnaelkaarrij>2 || aantalnaelkaarkolom>2 ||aantalrij>this.getRow(row).length/2 
+                        || aantalkolom> this.getColumn(column).length/2){
+                    this.Takuzu[row-1][column-1]= null;  
+                    gelukt =false;
+                    return false;   
+                }
+            }
+            }  
+        return gelukt;
+    }
+    @Override
+    public String toString(){
+        String output ="╔";
+        for (int i=0; i<Takuzu.length; i++){
+            output += "═";
+        }
+        output += "╗";
+        for (int i=1; i<=Takuzu.length; i++){
+            output += "\n║";
+        for (int j=1; j<=Takuzu.length; j++){
+            if (this.getCell(i,j)==null)
+                output +=".";
+            else
+                output +=  this.getCell(i,j);
+        }
+        output += "║";
+        }
+        output += "\n╚";
+        for (int i=0; i<Takuzu.length; i++){
+            output += "═";
+        }
+        output += "╝";
+       return output; 
+    }
+    public static void main(String[] args){
+        System.out.println("Geef de grootte in:");
+        Scanner kb = new Scanner(System.in);
+        Takuzu t = new Takuzu(Integer.parseInt(kb.nextLine()));
+        while (!t.isCompleted()){
+            System.out.println("Kies een vakje (rij,kolom).");
+            String vak= kb.nextLine();
+            int rij = Integer.parseInt(vak.substring(0, 1));
+            int kolom = Integer.parseInt(vak.substring(2,3));
+            System.out.println("Kies een cijfer (0 of 1).");
+            String value = kb.nextLine();
+            t.setCell(rij, kolom, value);
+            System.out.println(t.toString());
+                    }
+    }
+}
