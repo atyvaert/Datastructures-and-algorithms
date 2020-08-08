@@ -61,7 +61,7 @@ public class Winkel implements Serializable{
             return false;
         if  (!( o instanceof Winkel))
             return false;
-        final Winkel other = (Winkel) o;
+        final Winkel other = (Winkel) o; // die final is niet per se nodig
         return (Objects.equals(other.winkelID, this.winkelID) &&Objects.equals(other.naam, this.naam)
                 && Objects.equals(other.beloningTekst, this.beloningTekst) && Objects.equals(other.aantalPuntenPerEuro, this.aantalPuntenPerEuro)) ;
 
