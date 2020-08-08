@@ -51,7 +51,7 @@ public class Winkel implements Serializable{
     @Override
     public int hashCode(){
         int hash = 9674;
-        hash =79 * hash + Objects.hashCode(this.winkelID);
+        hash =79 * hash + Objects.hashCode(this.winkelID); // int hash = Objects.hashCode(this.winkelID) en dan return is voldoende
         return hash;
     }
     
