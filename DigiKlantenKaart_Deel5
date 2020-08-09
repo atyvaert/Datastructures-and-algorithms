@@ -36,8 +36,8 @@ private KlantenKaart aangemeldeKlant;
 
     @Override
     public int laadKlanten(String klantenBestand) throws KlantenKaartException {
-       boolean succes=false;
-    try {
+       boolean succes=false; 
+    try { // laad het data BESTAND
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(klantenBestand));
         HashMap<String, KlantenKaart> lijst = new HashMap<>();
         lijst = (HashMap<String, KlantenKaart>) inputStream.readObject();
