@@ -1,0 +1,31 @@
+/**
+ *
+ * @author fgailly
+ */
+ 
+ //klasse gekregen door prof
+ 
+ 
+public class Student {
+  private String studentenID;
+  private String naam;
+  private String voornaam;
+
+  public Student(String studentenID, String naam, String voornaam) {
+    this.studentenID = studentenID;
+    this.naam = naam;
+    this.voornaam = voornaam;
+  }
+
+  public String getStudentenID() {
+    return studentenID;
+  }
+
+  public String getNaam() {
+    return naam;
+  }
+
+  public String getVoornaam() {
+    return voornaam;
+  }
+}
