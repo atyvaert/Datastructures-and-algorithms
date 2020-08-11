@@ -1,0 +1,148 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+
+
+/**
+ *
+ * @author lfcoghe
+ */
+public class ScoreItem {
+    
+    private String naam;
+    private int maxScore;
+    private double gemiddelde;
+    private double mediaan;
+    private double min;
+    private double max;
+    private HashMap<String, Double> scores;
+
+    public ScoreItem(String naam, int maxScore) {
+        this.naam = naam;
+        this.maxScore = maxScore;
+        scores = new HashMap();
+    }
+    
+    public void toevoegenScore(String studentenID, double score){
+        if(score<= this.maxScore){
+            scores.put(studentenID, score);
+        }
+    }
+    
+    public void berekenStatistieken(){
+        ArrayList<Double> lijst = new ArrayList();
+        double gem=0;
+        for(Map.Entry<String, Double> entry : scores.entrySet()){
+            if(entry.getKey()!= null && entry.getValue() != null){
+                lijst.add(entry.getValue());
+            }
+        } 
+        lijst.trimToSize();
+        Collections.sort(lijst);
+        Double[] array = lijst.toArray(new Double[lijst.size()]);
+        if(array.length != 0){
+            this.min = array[0];
+            this.max = array[array.length-1];
+        }
+        if(array.length% 2 ==0){
+            double som = array[array.length/2]+ array[(array.length/2)-1];
+            this.mediaan = som/2;
+        }else
+            this.mediaan = array[array.length/2];
+        for(Double it: array){
+            gem+= it;
+        }
+        this.gemiddelde = gem/array.length;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 61 * hash + Objects.hashCode(this.naam);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ScoreItem other = (ScoreItem) obj;
+        if (!Objects.equals(this.naam, other.naam)) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getNaam() {
+        return naam;
+    }
+
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public double getGemiddelde() {
+        return gemiddelde;
+    }
+
+    public void setGemiddelde(double gemiddelde) {
+        this.gemiddelde = gemiddelde;
+    }
+
+    public double getMediaan() {
+        return mediaan;
+    }
+
+    public void setMediaan(double mediaan) {
+        this.mediaan = mediaan;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+    }
+
+    public HashMap<String, Double> getScores() {
+        return scores;
+    }
+
+    public void setScores(HashMap<String, Double> scores) {
+        this.scores = scores;
+    }
+    
+    @Override
+    public String toString(){
+        return this.naam + "\n"+ this.gemiddelde+"\n"+ this.mediaan +"\n"+ this.max+"\n"+ this.min;
+    }
+    
+    
+}
