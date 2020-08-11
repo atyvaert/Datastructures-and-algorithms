@@ -1,0 +1,46 @@
+/**
+ *
+ * @author lfcoghe
+ */
+public class BerekendScoreItem extends ScoreItem {
+    
+    private String[] scoreItems ;
+    private double[] gewichten;
+    
+    public BerekendScoreItem(String naam, int maxScore, String[] scoreitems, double[] gewichtjes){
+        super(naam, maxScore);
+        int som=0;
+        
+        if(scoreItems.length != gewichten.length)
+            System.exit(0);
+        else
+            scoreItems = scoreitems;
+        for(int i=0; i <gewichten.length;i++){
+            som+= gewichten[i];
+        }       
+        if(som !=1)
+            System.exit(0);
+        else
+            gewichten = gewichtjes;
+        
+    }
+
+    public String[] getScoreItems() {
+        return scoreItems;
+    }
+
+    public void setScoreItems(String[] scoreItems) {
+        this.scoreItems = scoreItems;
+    }
+
+    public double[] getGewichten() {
+        return gewichten;
+    }
+
+    public void setGewichten(double[] gewichten) {
+        this.gewichten = gewichten;
+    }
+    
+    
+}           
+
